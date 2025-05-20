@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cuento de Buenas Noches</title>
+  <style>
+    body {
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      background: #f9f3d2;
+      text-align: center;
+      padding: 2rem;
+      color: #333;
+    }
+    h1 {
+      font-size: 2rem;
+    }
+    #cuento {
+      font-size: 1.5rem;
+      margin: 2rem 0;
+    }
+    a {
+      display: inline-block;
+      margin-top: 1rem;
+      font-size: 1.2rem;
+      color: #0066cc;
+      text-decoration: none;
+    }
+    button {
+      padding: 0.8rem 1.2rem;
+      font-size: 1rem;
+      border: none;
+      background-color: #ffcc00;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #ffdd33;
+    }
+  </style>
+</head>
+<body>
+  <h1>🌙 Cuento de Buenas Noches 🌟</h1>
+  <div id="cuento">Haz clic para descubrir el cuento de hoy...</div>
+  <button onclick="mostrarCuento()">Mostrar cuento</button>
+  <div id="enlace"></div>
+
+  <script>
+    const cuentos = [
+      { titulo: "Caperucita Roja", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/caperucita-roja" },
+      { titulo: "Los tres cerditos", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/los-tres-cerditos" },
+      { titulo: "La Cenicienta", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/la-cenicienta" },
+      { titulo: "Blancanieves", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/blancanieves" },
+      { titulo: "Hansel y Gretel", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/hansel-y-gretel" },
+      { titulo: "El patito feo", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/el-patito-feo" },
+      { titulo: "El gato con botas", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/el-gato-con-botas" },
+      { titulo: "Ricitos de Oro", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/ricitos-de-oro" },
+      { titulo: "Pinocho", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/pinocho" },
+      { titulo: "El soldadito de plomo", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/el-soldadito-de-plomo" },
+      { titulo: "Alicia en el país de las maravillas", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/alicia-en-el-pais-de-las-maravillas" },
+      { titulo: "La bella durmiente", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/la-bella-durmiente" },
+      { titulo: "El flautista de Hamelín", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/el-flautista-de-hamelin" },
+      { titulo: "Rapunzel", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/rapunzel" },
+      { titulo: "Pulgarcito", enlace: "https://www.cuentoscortos.com/cuentos-clasicos/pulgarcito" }
+    ];
+
+    const diasClave = 15;
+    const claveLocalStorage = 'cuentos-mostrados';
+
+    function obtenerCuentosRecientes() {
+      const data = localStorage.getItem(claveLocalStorage);
+      return data ? JSON.parse(data) : [];
+    }
+
+    function guardarCuento(titulo) {
+      let recientes = obtenerCuentosRecientes();
+      recientes.push({ titulo, fecha: new Date().toISOString() });
+      recientes = recientes.slice(-diasClave);
+      localStorage.setItem(claveLocalStorage, JSON.stringify(recientes));
+    }
+
+    function mostrarCuento() {
+      const recientes = obtenerCuentosRecientes().map(c => c.titulo);
+      const disponibles = cuentos.filter(c => !recientes.includes(c.titulo));
+
+      let cuentoElegido;
+      if (disponibles.length === 0) {
+        // Reinicia si ya se han usado todos
+        localStorage.removeItem(claveLocalStorage);
+        cuentoElegido = cuentos[Math.floor(Math.random() * cuentos.length)];
+      } else {
+        cuentoElegido = disponibles[Math.floor(Math.random() * disponibles.length)];
+      }
+
+      document.getElementById("cuento").innerText = cuentoElegido.titulo;
+      document.getElementById("enlace").innerHTML = `<a href="${cuentoElegido.enlace}" target="_blank">📖 Leer el cuento completo</a>`;
+      guardarCuento(cuentoElegido.titulo);
+    }
+  </script>
+</body>
+</html>
